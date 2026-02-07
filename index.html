@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Vallarta a la Capital - Guía CDMX 2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .hero-gradient {
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(15, 23, 42, 0.9) 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Componente de icono SVG corregido con fragmentos para evitar errores de JSX
+        const Icon = ({ name, size = 20, className = "" }) => {
+            const icons = {
+                MapPin: <><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></>,
+                Train: <><path d="M7 15h10"/><path d="M15 22 17 15"/><path d="M9 22 7 15"/><path d="M8 5h8"/><path d="M21 13V4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9"/><path d="M3 15h18a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Z"/></>,
+                Bus: <><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h20"/><path d="M2 15v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5"/><path d="M2 15h20"/><path d="M22 15a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></>,
+                Car: <><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></>,
+                ShieldCheck: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></>,
+                Star: <><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>,
+                Coins: <><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></>,
+                Info: <><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></>,
+                Navigation: <><polygon points="3 11 22 2 13 21 11 13 3 11"/></>,
+                ChevronRight: <><path d="m9 18 6-6-6-6"/></>,
+                Camera: <><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></>,
+                Compass: <><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></>,
+                Search: <><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></>,
+                Layers: <><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.1 6.27a2 2 0 0 0 0 3.46l9.07 4.09a2 2 0 0 0 1.66 0l9.07-4.09a2 2 0 0 0 0-3.46Z"/><path d="m2.1 14.73 9.07 4.09a2 2 0 0 0 1.66 0l9.07-4.09"/><path d="m2.1 10.58 9.07 4.09a2 2 0 0 0 1.66 0l9.07-4.09"/></>,
+                Bike: <><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></>,
+                ShoppingBag: <><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></>,
+                Store: <><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-4.8 0v0a2.7 2.7 0 0 1-4.8 0v0a2.7 2.7 0 0 1-4.8 0v0A2 2 0 0 1 2 10V7Z"/></>
+            };
+
+            return (
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={size}
+                    height={size}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={className}
+                >
+                    {icons[name] || null}
+                </svg>
+            );
+        };
+
+        const NeighborhoodMap = ({ zone }) => {
+            const googleMapsUrls = {
+                juarez: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m12!1m3!1d15050.283186259063!2d-99.1678857434771!3d19.431016893699324!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff34e06385d7%3A0x6e9a04a546059639!2sJu%C3%A1rez%2C%20Ciudad%20de%20M%C3%A9xico!5e0!3m2!1ses-419!2smx!4v1700000000000",
+                cuauhtemoc: "", 
+                roma_condesa: "",
+                santa_maria: "",
+                centro_histórico: "",
+                polanco: "",
+                coyoacan: ""
+            };
+
+            const currentUrl = googleMapsUrls[zone];
+
+            return (
+                <div className="relative w-full h-48 md:h-64 bg-slate-200 rounded-2xl shadow-inner border border-slate-300 overflow-hidden">
+                    {currentUrl ? (
+                        <iframe 
+                            src={currentUrl}
+                            className="w-full h-full border-0"
+                            allowFullScreen="" 
+                            loading="lazy" 
+                            referrerPolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center h-full text-slate-400 p-4 text-center">
+                            <Icon name="Layers" size={32} className="mb-2 opacity-20" />
+                            <p className="text-[10px] font-bold uppercase tracking-widest">
+                                Selecciona un barrio para ver su mapa de Google.
+                            </p>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [selectedZone, setSelectedZone] = useState('juarez');
+
+            const zones = {
+                juarez: {
+                    name: "Colonia Juárez",
+                    vibe: "Céntrica y Trendy",
+                    priceRange: "$2,200 - $4,800 MXN",
+                    security: "Alta",
+                    landmark: "Ángel de la Ind.",
+                    ecobici: true,
+                    amenities: ["Reforma 222 (Plaza)", "Zona Rosa", "Oxxos constantes"],
+                    summary: "La zona más céntrica. Perfecta para caminar a Reforma y estar cerca de todo.",
+                    mobility: {
+                        metro: "Metro Insurgentes (L1).",
+                        bus: "Metrobús L1 y L7.",
+                        uber: "Viajes de 10-15 min a todo."
+                    },
+                    pros: ["Caminas a Reforma", "Zona gastronómica", "Segura"],
+                    cons: ["Ruido de tráfico", "Precios subiendo"]
+                },
+                cuauhtemoc: {
+                    name: "Colonia Cuauhtémoc",
+                    vibe: "Ejecutiva y Segura",
+                    priceRange: "$2,400 - $5,200 MXN",
+                    security: "Alta",
+                    landmark: "Embajadas / Reforma",
+                    ecobici: true,
+                    amenities: ["Plaza Rio de Janeiro", "Oxxos cada 2 cuadras"],
+                    summary: "Ubicada justo al norte de Reforma. Muy tranquila y segura.",
+                    mobility: {
+                        metro: "Metro Sevilla o Hidalgo.",
+                        bus: "Metrobús Reforma cerca.",
+                        uber: "Salida rápida a vías principales."
+                    },
+                    pros: ["Muy vigilada", "Tranquila", "Caminas a Chapultepec"],
+                    cons: ["Menos vida barrial", "Ambiente corporativo"]
+                },
+                roma_condesa: {
+                    name: "Roma / Condesa",
+                    vibe: "Parques y Vida Social",
+                    priceRange: "$2,200 - $5,800 MXN",
+                    security: "Alta-Media",
+                    landmark: "Parque México",
+                    ecobici: true,
+                    amenities: ["Plaza Insurgentes", "Supermercados", "Oxxos"],
+                    summary: "Zonas peatonales con parques hermosos. El favorito de los turistas.",
+                    mobility: {
+                        metro: "Líneas 1 y 9.",
+                        bus: "Metrobús L1 clave.",
+                        uber: "Céntrico pero con tráfico."
+                    },
+                    pros: ["Parques para el niño", "Muy caminable", "Estética"],
+                    cons: ["Precios turísticos", "Ruido nocturno"]
+                },
+                santa_maria: {
+                    name: "Santa María la Ribera",
+                    vibe: "Histórico y Familiar",
+                    priceRange: "$800 - $2,100 MXN",
+                    security: "Media",
+                    landmark: "Kiosco Morisco",
+                    ecobici: true,
+                    amenities: ["Forum Buenavista", "Mercado local", "Oxxos"],
+                    summary: "Barrio tradicional con alma de pueblo. Muy económico.",
+                    mobility: {
+                        metro: "Metro San Cosme (L2).",
+                        bus: "Buenavista (Hub).",
+                        uber: "Económico hacia el centro."
+                    },
+                    pros: ["Precio bajo", "Museos locales", "Familiar"],
+                    cons: ["Menos iluminado", "Zonas oscuras"]
+                },
+                centro_histórico: {
+                    name: "Centro / Alameda",
+                    vibe: "Histórico",
+                    priceRange: "$1,200 - $3,500 MXN",
+                    security: "Media",
+                    landmark: "Bellas Artes",
+                    ecobici: true,
+                    amenities: ["Madero", "Bellas Artes", "Farmacias 24h"],
+                    summary: "Rodeada de museos. No necesitas transporte para ver lo histórico.",
+                    mobility: {
+                        metro: "Zócalo, Bellas Artes.",
+                        bus: "Metrobús por todos lados.",
+                        uber: "Evitar por calles peatonales."
+                    },
+                    pros: ["Museos a pie", "Toda la historia", "Transporte"],
+                    cons: ["Caótico", "Ruido constante"]
+                },
+                polanco: {
+                    name: "Polanco",
+                    vibe: "Lujo y Museos",
+                    priceRange: "$3,800 - $9,000 MXN",
+                    security: "Alta",
+                    landmark: "Museo Antropología",
+                    ecobici: true,
+                    amenities: ["Antara / Miyana", "Palacio de Hierro"],
+                    summary: "La zona más exclusiva. Ideal para ir a museos sin caminar mucho.",
+                    mobility: {
+                        metro: "Línea 7.",
+                        bus: "Metrobús Reforma.",
+                        uber: "Medio preferido."
+                    },
+                    pros: ["Seguridad máxima", "Lujo", "Cercanía museos"],
+                    cons: ["Carísimo", "Tráfico pesado"]
+                },
+                coyoacan: {
+                    name: "Coyoacán",
+                    vibe: "Tradición y Bohemio",
+                    priceRange: "$1,500 - $4,000 MXN",
+                    security: "Alta",
+                    landmark: "Museo Frida Kahlo",
+                    ecobici: true,
+                    amenities: ["Oasis Coyoacán", "Mercado Antojitos"],
+                    summary: "Calles coloniales y plazas tranquilas. Muy familiar.",
+                    mobility: {
+                        metro: "Coyoacán / Viveros.",
+                        bus: "Trolebús.",
+                        uber: "Cerca de Xochimilco."
+                    },
+                    pros: ["Paz total", "Cultura", "Familiar"],
+                    cons: ["Lejos del centro", "Tráfico de acceso"]
+                }
+            };
+
+            return (
+                <div className="min-h-screen pb-12">
+                    {/* PORTADA PRINCIPAL */}
+                    <div className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden bg-slate-900">
+                        <img 
+                            src="./ect.jpg" 
+                            alt="De Vallarta a la Capital" 
+                            className="w-full h-full object-cover opacity-80"
+                            onError={(e) => {
+                                e.target.src = "https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?auto=format&fit=crop&q=80&w=2070";
+                                e.target.className = "w-full h-full object-cover opacity-40";
+                            }}
+                        />
+                        <div className="absolute inset-0 hero-gradient flex flex-col justify-end p-6 md:p-12">
+                            <div className="max-w-6xl mx-auto w-full">
+                                <span className="bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block shadow-lg">
+                                    Viaje 2026
+                                </span>
+                                <h1 className="text-4xl md:text-7xl font-black text-white leading-tight uppercase tracking-tighter shadow-sm">
+                                    De Vallarta <br/> <span className="text-indigo-400">a la Capital</span>
+                                </h1>
+                                <p className="text-slate-300 mt-4 max-w-xl text-sm md:text-lg font-medium leading-relaxed">
+                                    Guía estratégica de alojamiento y movilidad diseñada para tu visita a la Ciudad de México.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <header className="max-w-6xl mx-auto my-8 px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-4 text-slate-900">
+                            <div className="bg-indigo-600 p-3 rounded-2xl text-white shadow-lg">
+                                <Icon name="Compass" size={28} />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-black uppercase tracking-tighter">Plan de Viaje</h2>
+                                <p className="text-slate-500 text-xs font-bold uppercase">Explora por Barrio</p>
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                           <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center gap-1">
+                             <Icon name="Bike" size={12} /> Ecobici
+                           </span>
+                           <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center gap-1">
+                             <Icon name="ShoppingBag" size={12} /> Plazas
+                           </span>
+                        </div>
+                    </header>
+
+                    <main className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <div className="lg:col-span-4 space-y-4">
+                            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+                                <h2 className="text-[10px] font-black mb-4 flex items-center gap-2 text-indigo-500 uppercase tracking-widest">
+                                    <Icon name="MapPin" size={14} /> Seleccionar Zona
+                                </h2>
+                                <div className="grid grid-cols-1 gap-2">
+                                    {Object.keys(zones).map((key) => (
+                                        <button
+                                            key={key}
+                                            onClick={() => setSelectedZone(key)}
+                                            className={`flex items-center gap-4 p-4 rounded-2xl transition-all border-2 ${
+                                                selectedZone === key 
+                                                ? 'bg-indigo-600 border-indigo-600 text-white shadow-xl shadow-indigo-100 scale-[1.02]' 
+                                                : 'bg-white border-slate-50 text-slate-600 hover:bg-slate-50'
+                                            }`}
+                                        >
+                                            <div className="text-left flex-1">
+                                                <div className="font-black text-sm leading-tight">{zones[key].name}</div>
+                                                <div className={`text-[9px] uppercase mt-0.5 font-bold ${selectedZone === key ? 'text-indigo-200' : 'text-slate-400'}`}>
+                                                    {zones[key].vibe}
+                                                </div>
+                                            </div>
+                                            {selectedZone === key && <Icon name="ChevronRight" size={16} />}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="bg-indigo-900 p-6 rounded-3xl text-white shadow-lg">
+                                <h3 className="text-xs font-black uppercase mb-3 flex items-center gap-2">
+                                    <Icon name="Info" size={16} className="text-amber-400" /> Nota de Altura
+                                </h3>
+                                <p className="text-[11px] leading-relaxed opacity-80">
+                                    Recuerda que CDMX está a 2,240m. El primer día tomen mucha agua y caminen despacio para aclimatarse después de venir del mar.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="lg:col-span-8 space-y-6">
+                            <section className="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden">
+                                <div className="p-6 md:p-8 flex flex-col md:flex-row justify-between items-start gap-6 border-b border-slate-100">
+                                   <div className="flex-1">
+                                      <h2 className="text-3xl font-black text-slate-900 leading-none mb-4">{zones[selectedZone].name}</h2>
+                                      <p className="text-slate-500 text-sm font-medium italic">"{zones[selectedZone].summary}"</p>
+                                   </div>
+                                   <div className="bg-slate-900 text-white p-5 rounded-2xl shadow-xl min-w-[160px] text-center">
+                                      <p className="text-[9px] uppercase font-black tracking-widest text-slate-400 mb-1">Presupuesto</p>
+                                      <p className="text-xl font-mono font-black text-emerald-400 leading-none">{zones[selectedZone].priceRange}</p>
+                                   </div>
+                                </div>
+
+                                <div className="p-6 md:p-8 bg-slate-50 border-b border-slate-100">
+                                   <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Ubicación Real</h3>
+                                   <NeighborhoodMap zone={selectedZone} />
+                                </div>
+
+                                <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-6">
+                                        <div className="space-y-4">
+                                          <h3 className="text-xs font-black uppercase text-indigo-900 flex items-center gap-2 tracking-widest">
+                                            <Icon name="Store" size={16} /> Amenidades
+                                          </h3>
+                                          <div className="flex flex-wrap gap-2">
+                                            {zones[selectedZone].amenities.map((am, i) => (
+                                              <div key={i} className="flex items-center gap-2 text-[10px] font-bold text-slate-600 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200">
+                                                {am}
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                        <div className="space-y-4">
+                                          <h3 className="text-xs font-black uppercase text-indigo-900 flex items-center gap-2 tracking-widest">
+                                            <Icon name="ShieldCheck" size={16} /> Ventajas
+                                          </h3>
+                                          <div className="space-y-2">
+                                            {zones[selectedZone].pros.map((p, i) => (
+                                              <div key={i} className="flex items-center gap-3 text-xs font-bold text-emerald-800 bg-emerald-50 px-4 py-3 rounded-xl">
+                                                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div> {p}
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-slate-900 rounded-[2rem] p-6 text-white shadow-xl h-fit">
+                                        <h3 className="text-xs font-black uppercase text-indigo-300 mb-6 tracking-widest">Transporte</h3>
+                                        <div className="space-y-4">
+                                            <div className="flex gap-4">
+                                                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-300">
+                                                    <Icon name="Train" size={16} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[9px] font-black text-indigo-400 uppercase">Metro Próximo</p>
+                                                    <p className="text-xs font-bold">{zones[selectedZone].mobility.metro}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-4">
+                                                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-300">
+                                                    <Icon name="Bike" size={16} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[9px] font-black text-indigo-400 uppercase">Ecobici</p>
+                                                    <p className="text-xs font-bold">{zones[selectedZone].ecobici ? "Disponible" : "Limitada"}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
