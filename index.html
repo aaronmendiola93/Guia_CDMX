@@ -65,16 +65,15 @@
             );
         };
 
-        const NeighborhoodMap = ({ zone }) => {  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d17898.20463246239!2d-99.17363539950179!3d19.42821229640405!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff346f8a0407%3A0xd972cdceed05c72f!2sJu%C3%A1rez%2C%2006600%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770443394896!5m2!1ses!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            const googleMapsUrls = { 
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d17898.20463246239!2d-99.17363539950179!3d19.42821229640405!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff346f8a0407%3A0xd972cdceed05c72f!2sJu%C3%A1rez%2C%2006600%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770443394896!5m2!1ses!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                juarez: "",
-                cuauhtemoc: "", 
-                roma_condesa: "",
-                santa_maria: "",
-                centro_histórico: "",
-                polanco: "",
-                coyoacan: ""
+        const NeighborhoodMap = ({ zone }) => {
+            const googleMapsUrls = {
+                juarez: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d17898.20463246239!2d-99.17363539950179!3d19.42821229640405!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff346f8a0407%3A0xd972cdceed05c72f!2sJu%C3%A1rez%2C%2006600%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770444565774!5m2!1ses!2smx",
+                cuauhtemoc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7525.192711388603!2d-99.17348690642996!3d19.42983869524953!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f8cab43b81fd%3A0xe5b020a783577bb4!2sCuauht%C3%A9moc%2C%2006500%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770493895854!5m2!1ses!2smx", 
+                roma_condesa: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7525.865072937643!2d-99.18582598394568!3d19.415320659184555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff4489e635e3%3A0xed1c076e8bc9b8e7!2sColonia%20Condesa%2C%2006140%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770494221016!5m2!1ses!2smx",
+                santa_maria: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10641.08122329847!2d-99.17216844752303!3d19.44735841333716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f8c47b8777a5%3A0x776c220dcbba42c6!2sSta%20Mar%C3%ADa%20la%20Ribera%2C%2006400%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770494279926!5m2!1ses!2smx",
+                centro_histórico: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10641.92863276527!2d-99.14391540012147!3d19.434431650304187!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f92d2e0e4dbd%3A0x905574a740c4893d!2sCentro%20Hist%C3%B3rico%20de%20la%20Cdad.%20de%20M%C3%A9xico%2C%20Centro%2C%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770494333000!5m2!1ses!2smx",
+                polanco: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15050.252639749075!2d-99.20636159312082!3d19.431271695151345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d202036d4843f9%3A0xe4d37732c0d3a976!2sPolanco%2C%20Polanco%20I%20Secc%2C%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770494365053!5m2!1ses!2smx",
+                coyoacan: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4476.757976645445!2d-99.16599151321381!3d19.347936127624987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ffdcbe23dd01%3A0xdec5f4203bfd1f90!2sCoyoac%C3%A1n%2C%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses!2smx!4v1770494408475!5m2!1ses!2smx"
             };
 
             const currentUrl = googleMapsUrls[zone];
@@ -170,7 +169,7 @@
                         bus: "Buenavista (Hub).",
                         uber: "Económico hacia el centro."
                     },
-                    pros: ["Precio bajo", "Museos locales", "Familiar"],
+                    pros: ["Estarás muy cerca de nosotres 😉", "Precio bajo", "Museos locales", "Familiar"],
                     cons: ["Menos iluminado", "Zonas oscuras"]
                 },
                 centro_histórico: {
@@ -249,6 +248,7 @@
                                 </h1>
                                 <p className="text-slate-300 mt-4 max-w-xl text-sm md:text-lg font-medium leading-relaxed">
                                     Guía estratégica de alojamiento y movilidad diseñada para tu visita a la Ciudad de México.
+                                    <b> Por Aarón y Atzín </b>
                                 </p>
                             </div>
                         </div>
